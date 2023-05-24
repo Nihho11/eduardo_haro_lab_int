@@ -9,3 +9,6 @@ class Owner(models.Model):
     descripcion = models.CharField(max_length=50, default='')
     dni = models.CharField(max_length=8, default='00000000')
     vigente = models.BooleanField(default=True)
+
+    def __str__(self):
+        return "{} de {}".format(self.nombre, self.pais)
