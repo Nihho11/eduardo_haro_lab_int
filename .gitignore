@@ -1,0 +1,5 @@
+# ignora todos los directorios .idea del proyecto que se agregan al usar PyCharm
+.idea
+
+# ignora la base de datos sqlite3 que viene por defecto al crear un proyecto en Django
+*.sqlite3
