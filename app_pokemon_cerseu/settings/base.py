@@ -15,7 +15,8 @@ DJANGO_APPS = [
 
 # Acá están las dependencias externas que necesita el projecto
 THIRD_PARTY_APPS = [
-    'rest_framework'
+    'rest_framework',
+    'rest_framework_simplejwt'
 ]
 
 # Acá están todas las apps que se están creando para el proyecto
