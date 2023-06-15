@@ -19,6 +19,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),  # puedes cambiar el admin por cualquier cosa como 'admin_poke' pero es recomendado
-    path('owner/', include('owner.urls'))
+    path('owner/', include('apps.owner.urls'))
 ]
 
