@@ -4,8 +4,14 @@ from django.db.models import Q
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.core import serializers as ssr
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+
 from apps.owner.models import Owner
 from apps.owner.forms import OwnerForm
+from apps.owner.serializers import OwnerSerializer
 
 """
 Requisito: 
@@ -222,3 +228,41 @@ def ListOwnerSerializer(request):
     lista_owner = ssr.serialize('json', Owner.objects.all(), fields=['nombre', 'pais', 'edad', 'dni'])
 
     return HttpResponse(lista_owner, content_type="application/json")
+
+
+@api_view(['GET', 'POST'])
+def owner_api_view(request):
+
+    if request.method == 'GET':
+        print("Ingresó a GET")
+        queryset = Owner.objects.all()
+        serializers_class = OwnerSerializer(queryset, many=True)
+
+        return Response(serializers_class.data, status=status.HTTP_200_OK)
+    elif request.method == 'POST':
+        print("Data OWNER: {}".format(request.data))
+        serializer_class = OwnerSerializer(data=request.data)
+        if serializer_class.is_valid():
+            serializer_class.save()
+            return Response(serializer_class.data)
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def owner_details_view(request, pk):
+    owner = Owner.objects.filter(id=pk).first()
+    if owner:
+        if request.method == 'GET':
+            print("Ingresó a GET")
+            serializers_class = OwnerSerializer(owner)
+            return Response(serializers_class.data)
+
+        elif request.method == 'PUT':
+            serializer_class = OwnerSerializer(owner, data=request.data)
+
+            if serializer_class.is_valid():
+                serializer_class.save()
+                return Response(serializer_class.data)
+            return Response(serializer_class.errors, status=status.HTTP_400_BAD_REQUEST)
+        elif request.method == 'DELETE':
+            owner.delete()
+            return Response('Owner ha sido eliminado correctamente de la base de datos', status=status.HTTP_200_OK)
